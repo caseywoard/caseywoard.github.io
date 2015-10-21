@@ -1,0 +1,10 @@
+excerpt_separator: ""
+pygments: true
+markdown: kramdown
+url: http://caseywoard.github.io
+title: Casey Ward
+email: caseyward1@gmail.com
+author: Casey Ward
+description: My personal portfolio and blog.
+paginate: 5
+google_analytics: 
