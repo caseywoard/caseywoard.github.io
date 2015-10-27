@@ -1,6 +1,6 @@
 ---
 published: true
-title: Case Study of the Blocspot app and persisting data with NSCoding
+title: Case Study: the Blocspot app and persisting data with NSCoding
 layout: post
 ---
 Blocpost is the name of an iOS app that built from scratch as one of my Bloc.io apprenticship portfolio projects. The scope of this particular project boiled down to building an app that leveraged many components of the MapKit framework including the ability for a user to search the MapKit API for specific locations or item categories and have the results of that search (the most relevant per the user’s current location) be presented on a MKMapView with annotations. Beyond this a user is given the ability to save individual annotations or Points of Interest (aka POI’s), assign an individual Category to such POI’s and have those saved POI’s persist across open and closing the application. Other intended functionality included the ability to created new Categories that included an assigned UIColor that would be displayed within the appropriate UI elements associated with the particular category name.
