@@ -24,7 +24,7 @@ So NSCoding it was. But where was I going to save these custom objects? I decide
 
 //Example code of  DataSource.h file interface.
 
-```javascript
+```objectivec
 
 #import "POI.h"
 #import "BlocSpotCategory.h"
