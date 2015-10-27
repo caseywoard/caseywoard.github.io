@@ -87,7 +87,9 @@ The file path does exist but the data array found by the NSKeyedUnarchiver is em
 And of course we do something similar for unarchiving the user’s Category objects. See below:
 
 //Example code of my DataSource init method:
+
 {% highlight objective-c %}
+
 - (instancetype) init {
     self = [super init];
     
