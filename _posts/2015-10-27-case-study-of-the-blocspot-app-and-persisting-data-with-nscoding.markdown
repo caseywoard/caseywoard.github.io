@@ -21,7 +21,7 @@ Categories (Category.h)
 So NSCoding it was. But where was I going to save these custom objects? I decided a singleton “DataSource” object was right for the job. And within this class I thought just two NSMutableArray properties would do the trick for storing the user’s saved data (at least to start the app project).
 
 //Example code of  DataSource.h file interface.
-```objectivec
+```javascript
 
 #import "POI.h"
 #import "BlocSpotCategory.h"
@@ -39,8 +39,6 @@ So NSCoding it was. But where was I going to save these custom objects? I decide
 
 
 @end
-
-
 ```
 
 In the above code snippet you can see that I immediately import my two other custom model classes and I’m sure to declare a custom class method that will be used for initializing my singleton “sharedInstance”. I also declare a method called saveData that of course will be needed to save the user data by leveraging NSCoding. 
