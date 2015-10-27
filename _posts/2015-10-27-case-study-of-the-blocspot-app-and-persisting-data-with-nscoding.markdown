@@ -3,7 +3,6 @@ published: true
 title: Case Study of the Blocspot app and persisting data with NSCoding
 layout: post
 ---
-the summary:
 Blocpost is the name of an iOS app that built from scratch as one of my Bloc.io apprenticship portfolio projects. The scope of this particular project boiled down to building an app that leveraged many components of the MapKit framework including the ability for a user to search the MapKit API for specific locations or item categories and have the results of that search (the most relevant per the user’s current location) be presented on a MKMapView with annotations. Beyond this a user is given the ability to save individual annotations or Points of Interest (aka POI’s), assign an individual Category to such POI’s and have those saved POI’s persist across open and closing the application. Other intended functionality included the ability to created new Categories that included an assigned UIColor that would be displayed within the appropriate UI elements associated with the particular category name.
 
 The problem: Where to start?
@@ -22,6 +21,27 @@ Categories (Category.h)
 So NSCoding it was. But where was I going to save these custom objects? I decided a singleton “DataSource” object was right for the job. And within this class I thought just two NSMutableArray properties would do the trick for storing the user’s saved data (at least to start the app project).
 
 //Example code of  DataSource.h file interface.
+```objective-c
+
+#import "POI.h"
+#import "BlocSpotCategory.h"
+
+//#import "AFNetworking.h"
+
+@interface DataSource2 : NSObject
+
++ (instancetype) sharedInstance;
+
+@property (nonatomic, strong) NSMutableArray *poiFavorites; //objects of class POI
+@property (nonatomic, strong) NSMutableArray *categories; //objects of class Category
+
+- (void) saveData;
+
+
+@end
+
+
+```
 
 In the above code snippet you can see that I immediately import my two other custom model classes and I’m sure to declare a custom class method that will be used for initializing my singleton “sharedInstance”. I also declare a method called saveData that of course will be needed to save the user data by leveraging NSCoding. 
 
@@ -56,5 +76,4 @@ For example, the category name (of type NSString) was an important saved propert
 
 I applied the same initWithCoder and decodeWithCoder methods to other important properties of the Category class and the POI class as well of course. But in the end the results were the same. A user of the Blocspot app could save individual Points of Interests and Categories of their liking and have those values persist. Thank you NSCoding!
 
-In a future case study of this same app, I’d like to to highlight how I implemented several components of the MapKit framework. 
-
+In a future case study of this same app, I’d like to to highlight how I implemented several components of the MapKit framework.
