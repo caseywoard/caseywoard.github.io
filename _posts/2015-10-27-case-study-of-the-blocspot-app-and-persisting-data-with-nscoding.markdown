@@ -21,6 +21,7 @@ Categories (Category.h)
 So NSCoding it was. But where was I going to save these custom objects? I decided a singleton “DataSource” object was right for the job. And within this class I thought just two NSMutableArray properties would do the trick for storing the user’s saved data (at least to start the app project).
 
 //Example code of  DataSource.h file interface.
+
 ```javascript
 
 #import "POI.h"
