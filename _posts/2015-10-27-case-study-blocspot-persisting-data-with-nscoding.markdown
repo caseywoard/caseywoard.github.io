@@ -24,20 +24,56 @@ So NSCoding it was. But where was I going to save these custom objects? I decide
 
 //Example code of  DataSource.h file interface.
 {% highlight objective-c %}
+#import "POI.h"
+#import "Category.h"
+
+@interface DataSource2 : NSObject
+
++ (instancetype) sharedInstance;
+
+@property (nonatomic, strong) NSMutableArray *poiFavorites; //objects of class POI
+@property (nonatomic, strong) NSMutableArray *categories; //objects of class Category
+
+- (void) saveData;
+
+
+@end
 {% endhighlight %}
 
 In the above code snippet you can see that I immediately import my two other custom model classes and I’m sure to declare a custom class method that will be used for initializing my singleton “sharedInstance”. I also declare a method called saveData that of course will be needed to save the user data by leveraging NSCoding. 
 
-Within the implementation file, I want to start with defining this saveData method because elements within this method are important for how the app retrieves and unpackages the saved data using NSCoding’s NSKeyedUnarchiver at app launch. Those important elements are the file paths that I create for both the user’s saved Points of Interest and their saved Categories as shown here:
+Within the implementation file, I want to start with defining this saveData method because elements within this method are important for how the app retrieves and unpackage the saved data using NSCoding’s NSKeyedUnarchiver at app launch. Those important elements are the file paths that I create for both the user’s saved Points of Interest and their saved Categories as shown here:
 
-//Example code of saveData method
+//the saveData method
 {% highlight objective-c %}
+- (void) saveData {
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectoryPath = [paths objectAtIndex:0];
+    
+    //saving points of interest
+    NSString *filePath = [documentsDirectoryPath stringByAppendingPathComponent:@"poi"];
+    [NSKeyedArchiver archiveRootObject:self.poiFavorites toFile:filePath];
+    
+    //saving categories
+    filePath = [documentsDirectoryPath stringByAppendingPathComponent:@"category"];
+    [NSKeyedArchiver archiveRootObject:self.categories toFile:filePath];
+
+}
 {% endhighlight %}
 
 Now at the top of my .m file I begin with defining my singleton instance using the recommended style that I learned from my studies (nothing fancy here). 
 
 //Example code of my singleton
 {% highlight objective-c %}
++ (instancetype) sharedInstance {
+    static dispatch_once_t once;
+    static id sharedInstance;
+    dispatch_once(&once, ^{
+        sharedInstance = [[self alloc] init];
+    });
+    return sharedInstance;
+}
 {% endhighlight %}
 
 And immediately following this I define the the custom init method which of course outlines how this single instance of the DataSource class will construct itself. In most cases the answer to that will be the saved data (aka the user’s saved Points of Interest and individual Categories) which is achieved by creating a file path and confirming if that specific file path already exists on disk. In the case of Blocspot app, the two file paths we’re interested in end with “poi” or “category” as we defined in our saveData method earlier. But what if the user doesn’t have any saved data? That would certainly occur when the user opens the app for the very first time. In order to accommodate for this scenario and others I implemented several if/else statements to cover:
@@ -49,6 +85,45 @@ And of course we do something similar for unarchiving the user’s Category obje
 
 //Example code of my DataSource init method:
 {% highlight objective-c %}
+- (instancetype) init {
+    self = [super init];
+    
+    if (self) {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectoryPath = [paths objectAtIndex:0];
+        NSString *filePath = [documentsDirectoryPath stringByAppendingPathComponent:@"poi"];
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+            NSData *data = [NSData dataWithContentsOfFile:filePath];
+            NSMutableArray *savedData = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            if ([savedData isKindOfClass:[NSMutableArray class]] && savedData.count > 0) {
+                self.poiFavorites = savedData;
+            } else {
+                self.poiFavorites = [NSMutableArray new];
+            }
+        } else {
+            self.poiFavorites = [NSMutableArray new];
+        }
+
+        filePath = [documentsDirectoryPath stringByAppendingPathComponent:@"category"];
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+            NSData *data = [NSData dataWithContentsOfFile:filePath];
+            NSMutableArray *savedData = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            if ([savedData isKindOfClass:[NSMutableArray class]] && savedData.count > 0) {
+                self.categories = savedData; //original
+                
+            } else {
+                self.categories = [BlocSpotCategory createDefaultCategories].mutableCopy;
+            }
+        } else {
+            self.categories = [BlocSpotCategory createDefaultCategories].mutableCopy;
+        }
+        
+    }
+    return self;
+}
+
 {% endhighlight %}
 
 
@@ -79,4 +154,4 @@ For example, the category name (of type NSString) was an important saved propert
 
 I applied the same initWithCoder and decodeWithCoder methods to other important properties of the Category class and the POI class as well of course. But in the end the results were the same. A user of the Blocspot app could save individual Points of Interests and Categories of their liking and have those values persist. Thank you NSCoding!
 
-In a future case study of this same app, I’d like to to highlight how I implemented several components of the MapKit framework. 
+In a future case study of this same app, I’d like to to highlight how I implemented several components of the MapKit framework.
