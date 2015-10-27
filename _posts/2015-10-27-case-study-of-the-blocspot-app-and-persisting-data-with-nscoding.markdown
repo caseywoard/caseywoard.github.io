@@ -44,7 +44,7 @@ So NSCoding it was. But where was I going to save these custom objects? I decide
 
 {% endhighlight %}
 
-In the above code snippet you can see that I immediately import my two other custom model classes and I’m sure to declare a custom class method that will be used for initializing my singleton “sharedInstance”. I also declare a method called saveData that of course will be needed to save the user data by leveraging NSCoding. 
+Within the header file presented above you can see that I immediately import my two other custom model classes and I’m sure to declare a custom class method that will be used for initializing my singleton “sharedInstance”. I also declare a method called saveData that of course will be needed to save the user data by leveraging NSCoding. 
 
 Within the implementation file, I want to start with defining this saveData method because elements within this method are important for how the app retrieves and unpackages the saved data using NSCoding’s NSKeyedUnarchiver at app launch. Those important elements are the file paths that I create for both the user’s saved Points of Interest and their saved Categories as shown here:
 
