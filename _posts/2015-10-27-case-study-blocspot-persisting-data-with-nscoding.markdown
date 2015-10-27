@@ -18,11 +18,13 @@ the solution:
 Fresh off another application project that used CoreData, I immediately thought I would just leverage the same approach for managing persistence within the Blocspot app. However, after reading this recommended NSHiptser article it struck me that CoreData may be little overkill for this new project. And NSCoding might do just fine when considering the few elements users would want to be saving within this app. From the project requirements I understood a user would only be saving elements that could likely managed by two custom classes:
 
 Points of Interest (POI.h)
+
 Categories (Category.h)
 
 So NSCoding it was. But where was I going to save these custom objects? I decided a singleton “DataSource” object was right for the job. And within this class I thought just two NSMutableArray properties would do the trick for storing the user’s saved data (at least to start the app project).
 
 //Example code of  DataSource.h file interface.
+
 {% highlight objective-c %}
 #import "POI.h"
 #import "Category.h"
@@ -45,6 +47,7 @@ In the above code snippet you can see that I immediately import my two other cus
 Within the implementation file, I want to start with defining this saveData method because elements within this method are important for how the app retrieves and unpackage the saved data using NSCoding’s NSKeyedUnarchiver at app launch. Those important elements are the file paths that I create for both the user’s saved Points of Interest and their saved Categories as shown here:
 
 //the saveData method
+
 {% highlight objective-c %}
 - (void) saveData {
     
