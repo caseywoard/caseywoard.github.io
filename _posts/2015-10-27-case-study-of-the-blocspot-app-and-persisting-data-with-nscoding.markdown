@@ -88,8 +88,11 @@ Now at the top of my .m file I begin with defining my singleton instance using t
 {% endhighlight %}
 
 And immediately following this I define the the custom init method which of course outlines how this single instance of the DataSource class will construct itself. In most cases the answer to that will be the saved data (aka the user’s saved Points of Interest and individual Categories) which is achieved by creating a file path and confirming if that specific file path already exists on disk. In the case of Blocspot app, the two file paths we’re interested in end with “poi” or “category” as we defined in our saveData method earlier. But what if the user doesn’t have any saved data? That would certainly be the case when the user opens the app for the very first time. In order to accommodate for this scenario and others I implemented several if/else conditional statements to ensure:
+
 * The file path doesn’t exist (therefore create a new mutable array and set it equal to the app’s property for storing Points of Interest saved by the user).
+
 * The file path does exist and the data array found by the NSKeyedUnarchiver contains at least one object (therefore set the user’s saved Points of Interest array equal to that)
+
 * The file path does exist but the data array found by the NSKeyedUnarchiver is empty (therefore create a new mutable array and set it equal to the app’s property for storing Points of Interest saved by the user).
 
 And of course we do something similar for unarchiving the user’s Category objects. Complete init method displayed below:
