@@ -15,7 +15,7 @@ And how would I persist the data?
 It’s the implementation of that model for the app and my thinking around it that will be the focus of this case study.
 
 the solution:
-Fresh off another application project that used CoreData, I immediately thought I would just leverage the same approach for managing persistence within the Blocspot app. However, after reading this recommended NSHiptser article it struck me that CoreData may be little overkill for this new project. And NSCoding might do just fine when considering the few elements users would want to be saving within this app. From the project requirements I understood a user would only be saving elements that could likely managed by two custom classes:
+Fresh off another application project that used CoreData, I immediately thought I would just leverage the same approach for managing persistence within the Blocspot app. However, after reading this recommended [NSHiptser article](http://nshipster.com/nscoding/) it struck me that CoreData may be little overkill for this new project. And NSCoding might do just fine when considering the few elements users would want to be saving within this app. From the project requirements I understood a user would only be saving elements that could likely managed by two custom classes:
 
 *Points of Interest (POI.h)
 
