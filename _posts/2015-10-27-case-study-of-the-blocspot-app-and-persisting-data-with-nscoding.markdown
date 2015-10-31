@@ -8,29 +8,30 @@ Blocpost is the name of an iOS app that built from scratch as one of my Bloc.io 
 The problem: Where to start?
 
 Being that I was not at all familiar with the MapKit framework thus far in my studies, nearly each feature that the app assignment called for posed some challenges for me. Some research of the overall framework was definitely needed. But in order to get started in the right direction to build such an app (as with any app), I understood that I needed to consider the the overall model or organization for the app. I had to think about things such as: 
-What custom classes would be necessary? 
-How would instances of those instances relate to one another?  
-And how would I persist the data? 
+* What custom classes would be necessary? 
+* How would instances of those instances relate to one another?  
+* And how would I persist the data? 
 
 It’s the implementation of that model for the app and my thinking around it that will be the focus of this case study.
 
-the solution:
+The solution:
+
 Fresh off another application project that used CoreData, I immediately thought I would just leverage the same approach for managing persistence within the Blocspot app. However, after reading this recommended [NSHiptser article](http://nshipster.com/nscoding/) it struck me that CoreData may be little overkill for this new project. And NSCoding might do just fine when considering the few elements users would want to be saving within this app. From the project requirements I understood a user would only be saving elements that could likely managed by two custom classes:
 
-*Points of Interest (POI.h)
+* Points of Interest (POI.h)
 
-*Categories (Category.h)
+* Categories (Category.h)
 
 So NSCoding it was. But where was I going to save these custom objects? I decided a singleton “DataSource” object was right for the job. And within this class I thought just two NSMutableArray properties would do the trick for storing the user’s saved data (at least to start the app project).
 
-//Example code of  DataSource.h file interface.
+//DataSource.h file
 
 {% highlight objective-c %}
 
 #import "POI.h"
 #import "BlocSpotCategory.h"
 
-@interface DataSource2 : NSObject
+@interface DataSource : NSObject
 
 + (instancetype) sharedInstance;
 
@@ -86,10 +87,10 @@ Now at the top of my .m file I begin with defining my singleton instance using t
 
 {% endhighlight %}
 
-And immediately following this I define the the custom init method which of course outlines how this single instance of the DataSource class will construct itself. In most cases the answer to that will be the saved data (aka the user’s saved Points of Interest and individual Categories) which is achieved by creating a file path and confirming if that specific file path already exists on disk. In the case of Blocspot app, the two file paths we’re interested in end with “poi” or “category” as we defined in our saveData method earlier. But what if the user doesn’t have any saved data? That would certainly occur when the user opens the app for the very first time. In order to accommodate for this scenario and others I implemented several if/else statements to cover:
-The file path doesn’t exist (therefore create a new mutable array and set it equal to the app’s property for storing Points of Interest saved by the user).
-The file path does exist and the data array found by the NSKeyedUnarchiver contains at least one object (therefore set the user’s saved Points of Interest array equal to that)
-The file path does exist but the data array found by the NSKeyedUnarchiver is empty (therefore create a new mutable array and set it equal to the app’s property for storing Points of Interest saved by the user).
+And immediately following this I define the the custom init method which of course outlines how this single instance of the DataSource class will construct itself. In most cases the answer to that will be the saved data (aka the user’s saved Points of Interest and individual Categories) which is achieved by creating a file path and confirming if that specific file path already exists on disk. In the case of Blocspot app, the two file paths we’re interested in end with “poi” or “category” as we defined in our saveData method earlier. But what if the user doesn’t have any saved data? That would certainly be the case when the user opens the app for the very first time. In order to accommodate for this scenario and others I implemented several if/else conditional statements to ensure:
+* The file path doesn’t exist (therefore create a new mutable array and set it equal to the app’s property for storing Points of Interest saved by the user).
+* The file path does exist and the data array found by the NSKeyedUnarchiver contains at least one object (therefore set the user’s saved Points of Interest array equal to that)
+* The file path does exist but the data array found by the NSKeyedUnarchiver is empty (therefore create a new mutable array and set it equal to the app’s property for storing Points of Interest saved by the user).
 
 And of course we do something similar for unarchiving the user’s Category objects. Complete init method displayed below:
 
@@ -138,9 +139,9 @@ And of course we do something similar for unarchiving the user’s Category obje
 
 You might notice that I’m calling a class method when populating the sharedInstance’s self.categories array property if the unarchiver finds the savedData array for category objects is empty. The reason? I wanted users of the app to at least begin with a couple of category options at app launch and they could build upon this list if they so chose. 
 
-This class method is of course defined in the Category implementation file. In this same file I of course also implement the necessary <NSCoding> protocol methods for saving individual properties and instantiating Category objects with those properties with saved values. 
+This class method is of course defined in the Category implementation file. In this same file I also implement the necessary <NSCoding> protocol methods for saving individual properties and instantiating Category objects with those properties with saved values. 
 
-initiWithCoder & encodeWithCoder
+* initiWithCoder & encodeWithCoder
 
 For example, the category name (of type NSString) was an important saved property value that I wanted to persist across app sessions. That was accomplished like so:
 
